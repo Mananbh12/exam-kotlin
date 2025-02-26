@@ -1,5 +1,6 @@
 package com.amonteiro.a2025_02_supvinci_parisb
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
             _2025_02_supvinci_parisbTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = " from onCreate2",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -39,10 +40,17 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "Dark",
+    showSystemUi = true
+)
+@Preview(showBackground = true, widthDp = 320)
 @Composable
 fun GreetingPreview() {
     _2025_02_supvinci_parisbTheme {
-        Greeting("Android")
+        Greeting(" from Preview")
     }
 }
