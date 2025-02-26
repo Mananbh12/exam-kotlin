@@ -21,6 +21,8 @@ fun main() {
 
 }
 
+data class PictureBean(val id:Int, val url: String, val title: String, val longText: String)
+
 class RandomName(){
 
     private val list = arrayListOf("Toto", "Tata", "bobby")
