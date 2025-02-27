@@ -43,6 +43,10 @@ dependencies {
 
     implementation("com.google.code.gson:gson:+")
 
+    //Cycle de vie du viewmodel
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
