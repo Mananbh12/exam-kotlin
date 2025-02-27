@@ -46,6 +46,9 @@ dependencies {
     //Cycle de vie du viewmodel
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
+    //Glide, pour les images url
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
 
 
     implementation(libs.androidx.core.ktx)
