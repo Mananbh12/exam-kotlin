@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.amonteiro.a2025_02_supvinci_parisb.R
 import com.amonteiro.a2025_02_supvinci_parisb.model.PictureBean
 import com.amonteiro.a2025_02_supvinci_parisb.ui.theme._2025_02_supvinci_parisbTheme
@@ -48,7 +49,9 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel = MainViewModel()) {
+fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel = viewModel()) {
+
+
 
     Column(modifier= modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -57,7 +60,7 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel = M
         SearchBar(searchText= searchText)
 
         //Observation
-        val list = mainViewModel.dataList.collectAsStateWithLifecycle().value.filter { it.title.contains(searchText.value, true) }
+        val list = mainViewModel.dataList.collectAsStateWithLifecycle().value //.filter { it.title.contains(searchText.value, true) }
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(5f)) {
             items(list.size) {
@@ -79,7 +82,7 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel = M
                 Text(stringResource(R.string.clear_filter))
             }
             Button(
-                onClick = { /* Do something! */ },
+                onClick = { mainViewModel.loadWeathers(searchText.value) },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding
             ) {
                 Icon(
@@ -178,6 +181,24 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
 @Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, locale = "fr")
 @Composable
 fun SearchScreenPreview() {
+    //Il faut remplacer NomVotreAppliTheme par le thème de votre application
+    //Utilisé par exemple dans MainActivity.kt sous setContent {...}
+    _2025_02_supvinci_parisbTheme {
+
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            val viewmodel = MainViewModel()
+            viewmodel.loadFakeData()
+            SearchScreen(modifier = Modifier.padding(innerPadding), mainViewModel = viewmodel)
+        }
+    }
+}
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, locale = "fr")
+@Composable
+fun SearchScreenErrorPreview() {
     //Il faut remplacer NomVotreAppliTheme par le thème de votre application
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     _2025_02_supvinci_parisbTheme {

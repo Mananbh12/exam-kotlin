@@ -63,11 +63,6 @@ open class MainViewModel : ViewModel() {
 
         println("fin")
 
-
-    }
-
-    init {//Création d'un jeu de donnée au démarrage
-        loadFakeData()
     }
 
     fun loadFakeData(runInProgress :Boolean = false, errorMessage:String = "" ) {
