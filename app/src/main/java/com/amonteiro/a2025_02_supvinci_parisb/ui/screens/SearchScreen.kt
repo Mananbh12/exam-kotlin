@@ -18,11 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,9 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,54 +55,69 @@ import com.bumptech.glide.integration.compose.placeholder
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = viewModel(), // Utilisation correcte de viewModel()
+    mainViewModel: MainViewModel = viewModel(),
     navHostController: NavHostController? = null
 ) {
-    val list by mainViewModel.dataList.collectAsStateWithLifecycle()
-    val runInProgress by mainViewModel.runInProgress.collectAsStateWithLifecycle()
-    val errorMessage by mainViewModel.errorMessage.collectAsStateWithLifecycle()
+    var isDarkTheme by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        var searchText = remember { mutableStateOf("") }
-
-        SearchBar(searchText = searchText)
-
-        MyError(errorMessage = errorMessage)
-
-        AnimatedVisibility(visible = runInProgress) {
-            CircularProgressIndicator()
-        }
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(5f)) {
-            items(list.size) {
-                PictureRowItem(data = list[it], navHostController = navHostController)
-            }
-        }
-
-        Row {
-            Button(
-                onClick = { searchText.value = "" },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+    _2025_02_supvinci_parisbTheme(darkTheme = isDarkTheme) {
+        Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.Filled.Clear,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.clear_filter))
-            }
-            Button(
-                onClick = { mainViewModel.loadMovies(searchText.value) },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.bt_loaddata))
+                val list by mainViewModel.dataList.collectAsStateWithLifecycle()
+                val runInProgress by mainViewModel.runInProgress.collectAsStateWithLifecycle()
+                val errorMessage by mainViewModel.errorMessage.collectAsStateWithLifecycle()
+
+                var searchText = remember { mutableStateOf("") }
+
+                SearchBar(searchText = searchText)
+
+                MyError(errorMessage = errorMessage)
+
+                AnimatedVisibility(visible = runInProgress) {
+                    CircularProgressIndicator()
+                }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.weight(5f)
+                ) {
+                    items(list.size) {
+                        PictureRowItem(data = list[it], navHostController = navHostController)
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = { searchText.value = "" },
+                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    ) {
+                        Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text("Clear")
+                    }
+                    Button(
+                        onClick = { mainViewModel.loadMovies(searchText.value) },
+                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Search")
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text("Search")
+                    }
+                    IconButton(onClick = { isDarkTheme = !isDarkTheme }) {
+                        Icon(
+                            imageVector = if (isDarkTheme) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                            contentDescription = if (isDarkTheme) "Switch to Light Mode" else "Switch to Dark Mode"
+                        )
+                    }
+                }
             }
         }
     }
@@ -137,25 +152,23 @@ fun PictureRowItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Row(modifier = modifier
-        .background(MaterialTheme.colorScheme.tertiaryContainer)
-        .fillMaxWidth()
-        .clickable { expanded = !expanded }) {
-
+    Row(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
+            .fillMaxWidth()
+            .clickable { expanded = !expanded }
+    ) {
         GlideImage(
             model = data.url,
             contentDescription = data.title,
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(88.dp)
-                .clip(MaterialTheme.shapes.medium),
+                .padding(4.dp),
             loading = placeholder(R.drawable.image),
             failure = placeholder(R.drawable.image)
         )
 
-        Column(modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()) {
+        Column(modifier = Modifier.padding(4.dp)) {
             Text(text = data.title, style = MaterialTheme.typography.titleLarge)
             val text = if (expanded) data.longText else (data.longText.take(20) + "...")
             Text(
@@ -169,14 +182,10 @@ fun PictureRowItem(
 }
 
 @Preview(showBackground = true, showSystemUi = true)
-@Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, locale = "fr")
+@Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun SearchScreenPreview() {
-    _2025_02_supvinci_parisbTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            val viewModel = viewModel<MainViewModel>()
-            viewModel.loadFakeData(runInProgress = true, errorMessage = "Une erreur")
-            SearchScreen(modifier = Modifier.padding(innerPadding), mainViewModel = viewModel)
-        }
-    }
+    val viewModel = viewModel<MainViewModel>()
+    viewModel.loadFakeData(runInProgress = true, errorMessage = "Une erreur")
+    SearchScreen(mainViewModel = viewModel)
 }

@@ -5,13 +5,11 @@ import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-// Classe wrapper pour la réponse de l'API
 data class IMDbResponse(
     @SerializedName("results")
     val results: List<MovieBean>
 )
 
-// Modèle pour chaque film
 data class MovieBean(
     @SerializedName("id")
     val id: String = "",
@@ -26,7 +24,7 @@ data class MovieBean(
 object IMDbRepository {
 
     private val client = OkHttpClient()
-    private const val API_KEY = "b9d6898d0dmsh1706e8dce7fe4aap1104e6jsn041369779522" // Votre clé
+    private const val API_KEY = "b9d6898d0dmsh1706e8dce7fe4aap1104e6jsn041369779522"
     private const val API_HOST = "imdb236.p.rapidapi.com"
 
     fun searchMovies(query: String): List<MovieBean> {
