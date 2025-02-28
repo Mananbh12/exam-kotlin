@@ -2,4 +2,5 @@
     <string name="app_name">2025_02_supvinci_parisb</string>
     <string name="bt_loaddata">Load data</string>
     <string name="clear_filter">Clear filter</string>
+    <string name="hint_enter_movie_name">Enter movie name</string>
 </resources>

@@ -3,4 +3,5 @@
     <string name="app_name">2025_02_supvinci_parisb</string>
     <string name="bt_loaddata">Chargement</string>
     <string name="clear_filter">Effacer</string>
+    <string name="hint_enter_movie_name">Entrer le nom d\'un film</string>
 </resources>
