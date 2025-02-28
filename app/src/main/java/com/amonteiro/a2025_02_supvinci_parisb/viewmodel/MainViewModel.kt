@@ -15,7 +15,7 @@ class MainViewModel : ViewModel() {
     val errorMessage = MutableStateFlow("")
 
     init {
-        loadMovies("Interstellar") // Test initial
+        loadMovies("The Northman") // Test initial
     }
 
     fun loadMovies(query: String) {
@@ -40,7 +40,6 @@ class MainViewModel : ViewModel() {
             runInProgress.value = false
         }
     }
-
     fun loadFakeData(runInProgress: Boolean = false, errorMessage: String = "") {
         this.runInProgress.value = runInProgress
         this.errorMessage.value = errorMessage
